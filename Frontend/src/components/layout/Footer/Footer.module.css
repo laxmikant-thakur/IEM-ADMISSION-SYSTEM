@@ -1,0 +1,18 @@
+.footer {
+    background: linear-gradient(135deg, var(--gray-900) 0%, #0f1f3d 100%);
+    color: rgba(255, 255, 255, 0.5);
+    padding: var(--space-6) var(--container-padding);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer a {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color var(--transition-fast);
+}
+
+.footer a:hover {
+    color: #ffffff;
+}

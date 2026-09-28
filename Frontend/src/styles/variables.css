@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* === Primary — Deep Blue === */
+    --primary-50:  #e8edf6;
+    --primary-100: #c5d1e8;
+    --primary-200: #9eb3d9;
+    --primary-300: #7795ca;
+    --primary-400: #597fbf;
+    --primary-500: #3b69b4;
+    --primary-600: #3560a8;
+    --primary-700: #2d539a;
+    --primary-800: #25468c;
+    --primary-900: #1a3270;
+
+    /* === Neutral === */
+    --gray-50:  #f8f9fb;
+    --gray-100: #f1f3f6;
+    --gray-200: #e4e7ec;
+    --gray-300: #ced3db;
+    --gray-400: #9ba3b0;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+
+    /* === Semantic === */
+    --success-light: #ecfdf5;
+    --success:       #059669;
+    --success-dark:  #047857;
+
+    --warning-light: #fffbeb;
+    --warning:       #d97706;
+    --warning-dark:  #b45309;
+
+    --danger-light:  #fef2f2;
+    --danger:        #dc2626;
+    --danger-dark:   #b91c1c;
+
+    --info-light:    #eff6ff;
+    --info:          #2563eb;
+    --info-dark:     #1d4ed8;
+
+    /* === Surface === */
+    --bg-primary:    #ffffff;
+    --bg-secondary:  #f8f9fb;
+    --bg-tertiary:   #f1f3f6;
+    --surface:       #ffffff;
+    --surface-hover: #f8f9fb;
+    --border:        #e4e7ec;
+    --border-focus:  var(--primary-500);
+
+    /* === Typography === */
+    --font-family:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-size-xs:   0.75rem;
+    --font-size-sm:   0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg:   1.125rem;
+    --font-size-xl:   1.25rem;
+    --font-size-2xl:  1.5rem;
+    --font-size-3xl:  1.875rem;
+    --font-size-4xl:  2.25rem;
+    --font-weight-normal:   400;
+    --font-weight-medium:   500;
+    --font-weight-semibold: 600;
+    --font-weight-bold:     700;
+    --line-height-tight:    1.25;
+    --line-height-normal:   1.5;
+    --line-height-relaxed:  1.625;
+
+    /* === Spacing === */
+    --space-1:  0.25rem;
+    --space-2:  0.5rem;
+    --space-3:  0.75rem;
+    --space-4:  1rem;
+    --space-5:  1.25rem;
+    --space-6:  1.5rem;
+    --space-8:  2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+
+    /* === Border Radius === */
+    --radius-sm:   4px;
+    --radius-md:   8px;
+    --radius-lg:   12px;
+    --radius-xl:   16px;
+    --radius-full: 9999px;
+
+    /* === Shadows === */
+    --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md:  0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-lg:  0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-xl:  0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+
+    /* === Transitions === */
+    --transition-fast:   150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow:   350ms ease;
+
+    /* === Layout === */
+    --navbar-height:  64px;
+    --max-width:      1200px;
+    --container-padding: var(--space-6);
+}

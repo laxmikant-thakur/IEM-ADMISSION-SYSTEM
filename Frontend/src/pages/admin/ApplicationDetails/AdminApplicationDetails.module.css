@@ -1,0 +1,157 @@
+.page { animation: fadeIn 0.4s ease-out; }
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-6);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.backBtn:hover {
+    color: var(--primary-500);
+    background: var(--primary-50);
+}
+
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+}
+
+.title {
+    font-size: var(--font-size-2xl);
+    background: linear-gradient(135deg, var(--gray-900), var(--primary-800));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section { margin-bottom: var(--space-6); }
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+}
+
+.infoItem {
+    padding: var(--space-2) 0;
+}
+
+.infoLabel {
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-1);
+}
+
+.infoValue {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-800);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.documentsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+}
+
+.docCard {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.docCard:hover {
+    border-color: var(--primary-300);
+    box-shadow: var(--shadow-sm);
+}
+
+.docType {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-700);
+    margin-bottom: var(--space-2);
+    text-transform: capitalize;
+}
+
+.docName {
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    margin-bottom: var(--space-3);
+    word-break: break-all;
+}
+
+.docLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--primary-500);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.docLink:hover {
+    color: var(--primary-700);
+}
+
+.actions {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.rejectForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.rejectionBox {
+    padding: var(--space-4);
+    background: var(--danger-light);
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-md);
+    margin-top: var(--space-4);
+    border-left: 4px solid var(--danger);
+}
+
+.rejectionLabel {
+    font-weight: var(--font-weight-semibold);
+    color: var(--danger-dark);
+    margin-bottom: var(--space-1);
+    font-size: var(--font-size-sm);
+}
+
+.rejectionText {
+    color: var(--danger);
+    font-size: var(--font-size-sm);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

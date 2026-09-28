@@ -1,0 +1,71 @@
+.uploadGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-700);
+}
+
+.required {
+    color: var(--danger);
+    margin-left: 2px;
+}
+
+.dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--bg-secondary);
+}
+
+.dropzone:hover {
+    border-color: var(--primary-400);
+    background: var(--primary-50);
+}
+
+.dropzone.hasFile {
+    border-color: var(--success);
+    border-style: solid;
+    background: var(--success-light);
+}
+
+.dropzone.hasError {
+    border-color: var(--danger);
+}
+
+.icon {
+    font-size: 1.5rem;
+}
+
+.fileName {
+    font-size: var(--font-size-sm);
+    color: var(--success-dark);
+    font-weight: var(--font-weight-medium);
+    word-break: break-all;
+}
+
+.text {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+}
+
+.hiddenInput {
+    display: none;
+}
+
+.error {
+    font-size: var(--font-size-xs);
+    color: var(--danger);
+    margin-top: var(--space-1);
+}

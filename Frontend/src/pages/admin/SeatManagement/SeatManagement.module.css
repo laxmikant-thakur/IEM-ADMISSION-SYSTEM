@@ -1,0 +1,115 @@
+.page { animation: fadeIn 0.4s ease-out; }
+
+.header { margin-bottom: var(--space-6); }
+.title {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--space-1);
+    background: linear-gradient(135deg, var(--gray-900), var(--primary-800));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.subtitle { color: var(--gray-500); font-size: var(--font-size-sm); }
+
+.section {
+    margin-bottom: var(--space-8);
+}
+
+.sectionTitle {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-800);
+    margin-bottom: var(--space-4);
+}
+
+.tableWrapper { overflow-x: auto; }
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 2px solid var(--border);
+}
+
+.table td {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.table tbody tr:hover {
+    background: rgba(59, 105, 180, 0.03);
+}
+
+.deptName {
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-800);
+}
+
+.seatValue {
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-800);
+}
+
+.filled {
+    color: var(--warning);
+    font-weight: var(--font-weight-semibold);
+}
+
+.available {
+    color: var(--success);
+    font-weight: var(--font-weight-semibold);
+}
+
+.editInput {
+    width: 80px;
+    padding: var(--space-1) var(--space-2);
+    border: 2px solid var(--primary-500);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    outline: none;
+    font-family: var(--font-family);
+}
+
+.editActions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.progressBar {
+    width: 100%;
+    max-width: 120px;
+    height: 8px;
+    background: var(--gray-100);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-400), var(--primary-600));
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

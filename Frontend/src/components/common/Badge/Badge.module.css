@@ -1,0 +1,44 @@
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-full);
+    text-transform: capitalize;
+    letter-spacing: 0.025em;
+    border: 1px solid transparent;
+}
+
+.badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.submitted {
+    background: var(--info-light);
+    color: var(--info);
+    border-color: rgba(37, 99, 235, 0.15);
+}
+
+.underReview {
+    background: var(--warning-light);
+    color: var(--warning);
+    border-color: rgba(217, 119, 6, 0.15);
+}
+
+.accepted {
+    background: var(--success-light);
+    color: var(--success);
+    border-color: rgba(5, 150, 105, 0.15);
+}
+
+.rejected {
+    background: var(--danger-light);
+    color: var(--danger);
+    border-color: rgba(220, 38, 38, 0.15);
+}
