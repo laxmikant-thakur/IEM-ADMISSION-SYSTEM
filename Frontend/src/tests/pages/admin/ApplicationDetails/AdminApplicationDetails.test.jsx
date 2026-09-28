@@ -11,9 +11,11 @@ vi.mock('../../../../hooks/useSeats');
 
 const renderWithRouter = (ui) => {
     return render(
-        <BrowserRouter>
-            {ui}
-        </BrowserRouter>
+        <MemoryRouter initialEntries={['/admin/applications/1']}>
+            <Routes>
+                <Route path="/admin/applications/:id" element={ui} />
+            </Routes>
+        </MemoryRouter>
     );
 };
 
@@ -31,12 +33,6 @@ describe('AdminApplicationDetails Page', () => {
             { _id: 3, originalName: 'photo.jpg', documentType: 'photo', mimeType: 'image/jpeg' }
         ]
     };
-
-    const mockDocuments = [
-        { id: 1, originalName: '10th_marksheet.pdf', mimeType: 'application/pdf' },
-        { id: 2, originalName: '12th_marksheet.pdf', mimeType: 'application/pdf' },
-        { id: 3, originalName: 'photo.jpg', mimeType: 'image/jpeg' }
-    ];
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -69,7 +65,26 @@ describe('AdminApplicationDetails Page', () => {
         expect(screen.getByText('photo.jpg')).toBeInTheDocument();
     });
 
-    it('UT-39: Reject action requires/records rejection reason', async () => {
+    it('Accept button works', async () => {
+        adminService.acceptApplication.mockResolvedValue({ success: true });
+        
+        renderWithRouter(<AdminApplicationDetails />);
+        await screen.findByText('John Doe');
+        
+        // Click primary Accept button
+        const acceptBtn = screen.getByRole('button', { name: /Accept Application/i });
+        fireEvent.click(acceptBtn);
+        
+        // Click Accept button inside modal
+        const confirmAcceptBtn = screen.getAllByRole('button', { name: 'Accept' }).find(btn => !btn.textContent.includes('Accept Application'));
+        fireEvent.click(confirmAcceptBtn);
+        
+        await waitFor(() => {
+            expect(adminService.acceptApplication).toHaveBeenCalledWith("1");
+        });
+    });
+
+    it('Reject button works', async () => {
         adminService.rejectApplication.mockResolvedValue({ success: true });
         
         renderWithRouter(<AdminApplicationDetails />);
@@ -88,7 +103,7 @@ describe('AdminApplicationDetails Page', () => {
         fireEvent.click(confirmRejectBtn);
         
         await waitFor(() => {
-            expect(adminService.rejectApplication).toHaveBeenCalledWith(undefined, 'Marks too low');
+            expect(adminService.rejectApplication).toHaveBeenCalledWith("1", 'Marks too low');
         });
     });
 });

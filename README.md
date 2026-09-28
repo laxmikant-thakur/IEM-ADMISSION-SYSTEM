@@ -108,7 +108,7 @@ Accepted         Rejected
 ```
 
 - **Submitted:** The application has been successfully submitted and the application period has not yet passed.
-- **Under Review:** After the application deadline, submitted applications move into the administrative review stage.
+- **Under Review:** After the application deadline, submitted applications move into the administrative review stage. *(Note: If the administrator extends the deadline into the future, applications currently "Under Review" will revert to "Submitted" to enforce fairness).*
 - **Accepted:** The administrator approves the application. One seat is allocated from the applicant's selected department.
 - **Rejected:** The administrator rejects the application. A rejection reason is recorded.
 
@@ -122,14 +122,17 @@ Example:
 - `ECE` 6 / 6
 - `IT`  3 / 6
 
-**Seat Allocation Rules:**
+**Seat Allocation & Review Rules:**
 1. Submitting an application does not reduce seats.
-2. Rejecting an application does not reduce seats.
-3. Accepting an application reduces one available seat from the selected department.
-4. Accepting an application does not change other departments.
-5. A department with zero available seats cannot accept another applicant.
-6. Available seats cannot become negative.
-7. Seat information is maintained by the backend/database rather than being calculated independently by the frontend.
+2. The Accept button works: Clicking it triggers acceptance on the backend.
+3. The Reject button works: Clicking it triggers rejection on the backend.
+4. Reject requires/stores reason: The admin must supply a reason which is saved.
+5. Accept decreases selected department seat by 1.
+6. Accept does not decrease other departments.
+7. Reject does not decrease seats.
+8. Cannot accept when available seats = 0.
+9. Seat count never goes below 0.
+10. Seat information is maintained by the backend/database rather than being calculated independently by the frontend.
 
 ---
 
@@ -180,7 +183,7 @@ npm install
 Create a `.env` file inside the backend directory (refer to `.env.example`).
 **Do not commit the real `.env` file to GitHub.**
 
-```env
+### Backend `.env`
 PORT=5000
 
 MYSQL_HOST=localhost
@@ -196,6 +199,12 @@ SESSION_SECRET=your_secure_session_secret
 ADMIN_1_EMAIL=admin1@example.com
 ADMIN_1_PASSWORD=your_password
 # Add more admins as needed...
+```
+
+### Frontend `.env` (Optional / Production)
+By default, the frontend points to `http://localhost:5000/api`. When deploying to production, create a `.env` file in the `Frontend` directory and set the API URL:
+```env
+VITE_API_URL=https://your-production-backend-url.com/api
 ```
 
 ---

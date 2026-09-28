@@ -20,6 +20,7 @@ export default function AdminApplicationDetails() {
     const [actionLoading, setActionLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [showRejectModal, setShowRejectModal] = useState(false);
+    const [showAcceptModal, setShowAcceptModal] = useState(false);
     const [rejectionReason, setRejectionReason] = useState('');
 
     useEffect(() => { fetchDetails(); }, [id]);
@@ -34,8 +35,12 @@ export default function AdminApplicationDetails() {
         setLoading(false);
     };
 
-    const handleAccept = async () => {
-        if (!confirm('Are you sure you want to accept this application? This will reduce a seat in the department.')) return;
+    const handleAcceptClick = () => {
+        setShowAcceptModal(true);
+    };
+
+    const handleAcceptConfirm = async () => {
+        setShowAcceptModal(false);
         setActionLoading(true);
         try {
             const res = await adminService.acceptApplication(id);
@@ -173,7 +178,7 @@ export default function AdminApplicationDetails() {
 
             {/* Academic */}
             <Card title="Academic Information" className={styles.section}>
-                <div className={styles.infoGrid}>
+                <div className={styles.infoGrid} style={{ marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-4)', borderBottom: '1px solid var(--border)' }}>
                     <div className={styles.infoItem}>
                         <div className={styles.infoLabel}>10th Board</div>
                         <div className={styles.infoValue}>{a.tenth_board}</div>
@@ -186,6 +191,8 @@ export default function AdminApplicationDetails() {
                         <div className={styles.infoLabel}>10th Percentage</div>
                         <div className={styles.infoValue}>{a.tenth_percentage}%</div>
                     </div>
+                </div>
+                <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
                         <div className={styles.infoLabel}>12th Board</div>
                         <div className={styles.infoValue}>{a.twelfth_board}</div>
@@ -219,16 +226,25 @@ export default function AdminApplicationDetails() {
             <Card title="Uploaded Documents" className={styles.section}>
                 <div className={styles.documentsGrid}>
                     {a.documents && a.documents.length > 0 ? (
-                        a.documents.map(doc => (
-                            <div key={doc._id} className={styles.docCard}>
-                                <div className={styles.docType}>{doc.documentType.replace(/_/g, ' ')}</div>
-                                <div className={styles.docName}>{doc.originalName}</div>
-                                <a href={adminService.getDocumentUrl(doc._id)}
-                                   target="_blank" rel="noopener noreferrer" className={styles.docLink}>
-                                    View Document →
-                                </a>
-                            </div>
-                        ))
+                        Object.values(a.documents.reduce((acc, doc) => {
+                            acc[doc.documentType] = doc; // Keep the latest upload for each type
+                            return acc;
+                        }, {})).map(doc => {
+                            let docTypeLabel = doc.documentType.replace(/_/g, ' ');
+                            docTypeLabel = docTypeLabel.replace(/\btenth\b/i, '10th');
+                            docTypeLabel = docTypeLabel.replace(/\btwelfth\b/i, '12th');
+                            
+                            return (
+                                <div key={doc._id} className={styles.docCard}>
+                                    <div className={styles.docType}>{docTypeLabel}</div>
+                                    <div className={styles.docName}>{doc.originalName}</div>
+                                    <a href={adminService.getDocumentUrl(doc._id)}
+                                       target="_blank" rel="noopener noreferrer" className={styles.docLink}>
+                                        View Document →
+                                    </a>
+                                </div>
+                            );
+                        })
                     ) : (
                         <p style={{ color: 'var(--gray-500)' }}>No documents uploaded</p>
                     )}
@@ -246,12 +262,23 @@ export default function AdminApplicationDetails() {
             {/* Action Buttons */}
             {a.status === 'Under Review' && (
                 <div className={styles.actions}>
-                    <Button variant="success" size="lg" onClick={handleAccept} loading={actionLoading}>
+                    <Button variant="success" size="lg" onClick={handleAcceptClick} loading={actionLoading}>
                         ✓ Accept Application
                     </Button>
                     <Button variant="danger" size="lg" onClick={() => setShowRejectModal(true)}>
                         ✗ Reject Application
                     </Button>
+                </div>
+            )}
+
+            {/* Submitted Notice */}
+            {a.status === 'Submitted' && (
+                <div className={styles.actions}>
+                    <div style={{ width: '100%' }}>
+                        <Alert type="info">
+                            <strong>Review Unavailable:</strong> The application period is currently active. Accept and Reject actions will become available once the submission deadline has passed.
+                        </Alert>
+                    </div>
                 </div>
             )}
 
@@ -275,6 +302,19 @@ export default function AdminApplicationDetails() {
                     <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'flex-end' }}>
                         <Button variant="secondary" onClick={() => setShowRejectModal(false)}>Cancel</Button>
                         <Button variant="danger" onClick={handleReject} loading={actionLoading}>Reject</Button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Accept Modal */}
+            <Modal isOpen={showAcceptModal} onClose={() => setShowAcceptModal(false)} title="Accept Application">
+                <div className={styles.rejectForm}>
+                    <p style={{ color: 'var(--gray-600)', marginBottom: 'var(--space-4)' }}>
+                        Are you sure you want to accept this application?
+                    </p>
+                    <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'flex-end' }}>
+                        <Button variant="secondary" onClick={() => setShowAcceptModal(false)}>Cancel</Button>
+                        <Button variant="success" onClick={handleAcceptConfirm} loading={actionLoading}>Accept</Button>
                     </div>
                 </div>
             </Modal>

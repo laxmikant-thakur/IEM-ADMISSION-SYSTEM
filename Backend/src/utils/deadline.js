@@ -42,14 +42,21 @@ const updateDeadline = async (newDeadline) => {
  */
 const transitionSubmittedApplications = async () => {
     const passed = await isDeadlinePassed();
-    if (!passed) return 0;
-
     const pool = getPool();
-    const [result] = await pool.query(
-        "UPDATE applications SET status = 'Under Review' WHERE status = 'Submitted'"
-    );
 
-    return result.affectedRows;
+    if (passed) {
+        // Deadline has passed: Submitted -> Under Review
+        const [result] = await pool.query(
+            "UPDATE applications SET status = 'Under Review' WHERE status = 'Submitted'"
+        );
+        return result.affectedRows;
+    } else {
+        // Deadline is in the future: Under Review -> Submitted (in case of extension)
+        const [result] = await pool.query(
+            "UPDATE applications SET status = 'Submitted' WHERE status = 'Under Review'"
+        );
+        return result.affectedRows;
+    }
 };
 
 module.exports = {

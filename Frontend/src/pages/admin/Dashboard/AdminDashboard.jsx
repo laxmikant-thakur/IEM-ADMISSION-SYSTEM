@@ -17,7 +17,6 @@ export default function AdminDashboard() {
     const { user } = useAuth();
     const { departments, totalSeats, availableSeats, filledSeats, loading: seatsLoading } = useSeats();
     const [stats, setStats] = useState(null);
-    const [awaitingStudents, setAwaitingStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deadline, setDeadline] = useState(null);
     const [showDeadlineModal, setShowDeadlineModal] = useState(false);
@@ -29,14 +28,12 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [statsRes, studentsRes, deadlineRes] = await Promise.all([
+                const [statsRes, deadlineRes] = await Promise.all([
                     adminService.getDashboardStats(),
-                    adminService.getStudents({ status: 'awaiting' }),
                     adminService.getDeadline()
                 ]);
 
                 if (statsRes.success) setStats(statsRes.data.stats);
-                if (studentsRes.success) setAwaitingStudents(studentsRes.data.students);
                 if (deadlineRes.success) setDeadline(deadlineRes.data);
             } catch (err) {
                 console.error('Dashboard fetch error:', err);
@@ -100,92 +97,46 @@ export default function AdminDashboard() {
 
             {/* Deadline Info */}
             {deadline && (
-                <Card title="Application Deadline">
-                    <div className={styles.deadlineInfo}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-                            <span className={styles.deadlineValue}>
-                                {new Date(deadline.deadline).toLocaleDateString('en-IN', {
-                                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                                    hour: '2-digit', minute: '2-digit'
-                                })}
-                            </span>
-                            <Badge status={deadline.isPassed ? 'rejected' : 'accepted'}>
-                                {deadline.isPassed ? 'Deadline Passed' : 'Accepting Applications'}
-                            </Badge>
+                <div className={styles.section}>
+                    <Card title="Application Deadline">
+                        <div className={styles.deadlineInfo}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+                                <span className={styles.deadlineValue}>
+                                    {new Date(deadline.deadline).toLocaleDateString('en-IN', {
+                                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                                        hour: '2-digit', minute: '2-digit'
+                                    })}
+                                </span>
+                                <Badge status={deadline.isPassed ? 'rejected' : 'accepted'}>
+                                    {deadline.isPassed ? 'Deadline Passed' : 'Accepting Applications'}
+                                </Badge>
+                            </div>
+                            <Button variant="secondary" size="sm" onClick={() => {
+                                setNewDeadline(new Date(deadline.deadline).toISOString().slice(0, 16));
+                                setDeadlineError('');
+                                setShowDeadlineModal(true);
+                            }}>
+                                Edit Deadline
+                            </Button>
                         </div>
-                        <Button variant="secondary" size="sm" onClick={() => {
-                            setNewDeadline(new Date(deadline.deadline).toISOString().slice(0, 16));
-                            setDeadlineError('');
-                            setShowDeadlineModal(true);
-                        }}>
-                            Edit Deadline
-                        </Button>
-                    </div>
-                </Card>
+                    </Card>
+                </div>
             )}
 
             {/* Department Seat Charts */}
             <div className={styles.section}>
-                <h2 className={styles.sectionTitle}>Department Seats</h2>
-                <SeatSummary
-                    departments={departments}
-                    showStats={true}
-                    totalSeats={totalSeats}
-                    availableSeats={availableSeats}
-                    filledSeats={filledSeats}
-                />
-            </div>
-
-            {/* Students Awaiting Review */}
-            <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <h2 className={styles.sectionTitle}>Students Awaiting Review</h2>
-                    <span className={styles.count}>{awaitingStudents.length} pending</span>
-                </div>
-                <Card>
-                    {awaitingStudents.length === 0 ? (
-                        <div className={styles.emptyState}>
-                            <div className={styles.emptyIcon}>✅</div>
-                            <p className={styles.emptyText}>All applications have been reviewed</p>
-                        </div>
-                    ) : (
-                        <div className={styles.tableWrapper}>
-                            <table className={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th>Student Name</th>
-                                        <th>App ID</th>
-                                        <th>Department</th>
-                                        <th>Status</th>
-                                        <th>Submitted</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {awaitingStudents.map(student => (
-                                        <tr key={student.id}>
-                                            <td className={styles.studentName}>{student.applicant_name}</td>
-                                            <td className={styles.appId}>APP-{String(student.id).padStart(4, '0')}</td>
-                                            <td>{student.department_name}</td>
-                                            <td><Badge status={student.status === 'Submitted' ? 'submitted' : 'underReview'}>{student.status}</Badge></td>
-                                            <td>{new Date(student.submitted_at).toLocaleDateString('en-IN')}</td>
-                                            <td>
-                                                <Button
-                                                    variant="primary"
-                                                    size="sm"
-                                                    onClick={() => navigate(`/admin/applications/${student.id}`)}
-                                                >
-                                                    Review
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                <Card title="Department Seats">
+                    <SeatSummary
+                        departments={departments}
+                        showStats={true}
+                        totalSeats={totalSeats}
+                        availableSeats={availableSeats}
+                        filledSeats={filledSeats}
+                    />
                 </Card>
             </div>
+
+
 
             {/* Deadline Modal */}
             <Modal isOpen={showDeadlineModal} onClose={() => setShowDeadlineModal(false)} title="Update Application Deadline">

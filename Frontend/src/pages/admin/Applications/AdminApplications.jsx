@@ -12,7 +12,6 @@ export default function AdminApplications() {
     const [applications, setApplications] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
     const [deptFilter, setDeptFilter] = useState('');
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -20,8 +19,9 @@ export default function AdminApplications() {
     useEffect(() => { fetchApplications(); }, []);
 
     useEffect(() => {
-        let result = applications;
-        if (statusFilter) result = result.filter(a => a.status === statusFilter);
+        // Only show 'waiting' applications on this page
+        let result = applications.filter(a => a.status === 'Submitted' || a.status === 'Under Review');
+        
         if (deptFilter) result = result.filter(a => a.department_id === parseInt(deptFilter, 10));
         if (search) {
             const s = search.toLowerCase();
@@ -33,7 +33,7 @@ export default function AdminApplications() {
             );
         }
         setFiltered(result);
-    }, [applications, search, statusFilter, deptFilter]);
+    }, [applications, search, deptFilter]);
 
     const fetchApplications = async () => {
         try {
@@ -59,17 +59,6 @@ export default function AdminApplications() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <select
-                        className={styles.filterSelect}
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                        <option value="">All Status</option>
-                        <option value="Submitted">Submitted</option>
-                        <option value="Under Review">Under Review</option>
-                        <option value="Accepted">Accepted</option>
-                        <option value="Rejected">Rejected</option>
-                    </select>
                     <select
                         className={styles.filterSelect}
                         value={deptFilter}

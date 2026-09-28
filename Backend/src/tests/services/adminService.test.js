@@ -34,7 +34,7 @@ describe('AdminService Decision Logic', () => {
     });
 
     describe('acceptApplication', () => {
-        it('UT-23: Admin accepts valid application and seat decreases', async () => {
+        it('Accept decreases selected department seat by 1', async () => {
             // Arrange
             ApplicationModel.findById.mockResolvedValue({
                 id: 1,
@@ -57,14 +57,34 @@ describe('AdminService Decision Logic', () => {
                 'UPDATE applications SET status = ? WHERE id = ?',
                 ['Accepted', 1]
             );
-            // Should decrement seats
+            // Should decrement seats for selected department only
             expect(DepartmentModel.decrementSeats).toHaveBeenCalledWith(101, mockConnection);
             // Should commit
             expect(mockConnection.commit).toHaveBeenCalled();
             expect(mockConnection.release).toHaveBeenCalled();
         });
 
-        it('UT-25: Cannot accept an application when selected department has no seats', async () => {
+        it('Accept does not decrease other departments', async () => {
+            // Implicitly tested above, but explicitly adding a test block
+            // Arrange
+            ApplicationModel.findById.mockResolvedValue({
+                id: 1,
+                status: 'Under Review',
+                department_id: 101,
+                department_name: 'CSE'
+            });
+            DepartmentModel.decrementSeats.mockResolvedValue();
+
+            // Act
+            await AdminService.acceptApplication(1);
+
+            // Assert
+            // It ONLY calls decrement for department 101, proving it doesn't touch others.
+            expect(DepartmentModel.decrementSeats).toHaveBeenCalledTimes(1);
+            expect(DepartmentModel.decrementSeats).not.toHaveBeenCalledWith(102, expect.anything());
+        });
+
+        it('Cannot accept when available seats = 0', async () => {
             // Arrange
             ApplicationModel.findById.mockResolvedValue({
                 id: 1,
@@ -84,6 +104,25 @@ describe('AdminService Decision Logic', () => {
             expect(mockConnection.release).toHaveBeenCalled();
         });
 
+        it('Seat count never goes below 0', async () => {
+            // Arrange
+            ApplicationModel.findById.mockResolvedValue({
+                id: 1,
+                status: 'Under Review',
+                department_id: 101,
+                department_name: 'CSE'
+            });
+            
+            // Mock decrementSeats throwing error due to no seats
+            DepartmentModel.decrementSeats.mockRejectedValue(new Error('No seats available'));
+
+            // Act & Assert
+            await expect(AdminService.acceptApplication(1)).rejects.toThrow('No seats available in CSE');
+            
+            // Seat reduction logic does not happen since it throws
+            expect(mockConnection.commit).not.toHaveBeenCalled();
+        });
+
         it('should block accepting an application that is not Under Review', async () => {
             // Arrange
             ApplicationModel.findById.mockResolvedValue({
@@ -100,7 +139,7 @@ describe('AdminService Decision Logic', () => {
     });
 
     describe('rejectApplication', () => {
-        it('UT-24: Admin rejects application with a rejection reason (seat unchanged)', async () => {
+        it('Reject does not decrease seats', async () => {
             // Arrange
             ApplicationModel.findById.mockResolvedValue({
                 id: 2,
@@ -120,6 +159,17 @@ describe('AdminService Decision Logic', () => {
             
             // Seats should NOT be decremented
             expect(DepartmentModel.decrementSeats).not.toHaveBeenCalled();
+        });
+
+        it('Reject requires/stores reason', async () => {
+            // Arrange
+            ApplicationModel.findById.mockResolvedValue({
+                id: 2,
+                status: 'Under Review'
+            });
+
+            // Act & Assert
+            await expect(AdminService.rejectApplication(2, '')).rejects.toThrow('Rejection reason is required');
         });
 
         it('should block rejecting if no reason provided', async () => {
